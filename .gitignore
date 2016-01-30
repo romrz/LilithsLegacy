@@ -1,0 +1,8 @@
+# Ignore Everything
+/*
+
+# Except for these:
+!/.gitignore
+!/README.md
+!/Assets
+!/ProjectSettings
