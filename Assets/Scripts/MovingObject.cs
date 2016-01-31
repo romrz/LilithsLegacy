@@ -33,6 +33,8 @@ public class MovingObject : MonoBehaviour {
         else {
             if(tag == "Player") {
                 if(hit.collider.tag == "Exit") {
+                    transform.position = endPosition;
+                    hit.collider.enabled = false;
                     GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().SetNextLevel();
                     Debug.Log("Salida");
                 }

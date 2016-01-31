@@ -7,8 +7,11 @@ public class Map : MonoBehaviour {
     public GameObject[] obstacles;
     public GameObject floorTile;
     public GameObject exitTile;
+    public Renderer transition;
 
     public GameObject player;
+
+    public float transitionTime = 1.0f;
 
     private int width = 10;
     private int height = 10;
@@ -16,6 +19,8 @@ public class Map : MonoBehaviour {
     private List<Level> levels;
     private Level currentLevel;
     private int currentLevelNum;
+
+    private int changeLevel = 0;
 
     struct Level {
         public int[,] map;
@@ -106,6 +111,8 @@ public class Map : MonoBehaviour {
 
 
     void Start () {
+        transition.material.color = new Color(0, 0, 0, 0);
+
         levels = new List<Level>();
 
         levels.Add(new Level(map1, position1, exit1));
@@ -117,7 +124,51 @@ public class Map : MonoBehaviour {
         LoadLevel(0);
     }
 
+    void FixedUpdate()
+    {
+        if(changeLevel == 1) {
+            StartCoroutine("FadeInTransition");
+            changeLevel = 0;
+        }
+        if(changeLevel == 2)
+        {
+            ChangeLevel();
+            StartCoroutine("FadeOutTransition");
+            changeLevel = 0;
+        }
+    }
+
     public void SetNextLevel() {
+        if (changeLevel != 0) return;
+        changeLevel = 1;
+    }
+
+    IEnumerator FadeInTransition() {
+        for (float f = 0; f < 1; f += 0.1f)
+        {
+            Color c = transition.material.color;
+            c.a = f;
+            transition.material.color = c;
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        transition.material.color = new Color(0, 0, 0, 1);
+        changeLevel = 2;
+    }
+
+    IEnumerator FadeOutTransition() {
+        for (float f = 1; f > 0; f -= 0.1f) {
+            Color c = transition.material.color;
+            c.a = f;
+            transition.material.color = c;
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        transition.material.color = new Color(0, 0, 0, 0);
+        changeLevel = 0;
+    }
+
+    void ChangeLevel() {
         if (currentLevelNum + 1 < levels.Count) {
             ClearLevel();
             LoadLevel(currentLevelNum + 1);
