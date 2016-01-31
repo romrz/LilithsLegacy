@@ -121,6 +121,7 @@ MonoBehaviour:
   exitTile: {fileID: 163802, guid: 1428f05ba6632974c911262d971a7b0f, type: 2}
   transition: {fileID: 1051994922}
   player: {fileID: 1179025292}
+  transitionTime: 1
 --- !u!4 &474611057
 Transform:
   m_ObjectHideFlags: 0
@@ -237,6 +238,10 @@ Prefab:
     - target: {fileID: 407584, guid: 40287998aa7d9ec49965b1c195bb7392, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11461504, guid: 40287998aa7d9ec49965b1c195bb7392, type: 2}
+      propertyPath: collisionLayer.m_Bits
+      value: 11776
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 40287998aa7d9ec49965b1c195bb7392, type: 2}

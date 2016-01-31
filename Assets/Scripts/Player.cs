@@ -7,6 +7,9 @@ public class Player : MovingObject {
     private bool hasMovedTwoTimes = false;
     private int moveCount = 0;
 
+    private int invalidMoveCount = 0;
+    private bool invalidMoves = true;
+
     protected override void Start() {
         base.Start();
     }
@@ -47,7 +50,23 @@ public class Player : MovingObject {
             hasMovedTwoTimes = true;
         }
 
-        Move(moveX, moveY);
+        bool move = Move(moveX, moveY);
+
+        if (hasMoved) {
+            invalidMoves = invalidMoves && !move;
+            if (invalidMoves) {
+                invalidMoveCount++;
+                if (invalidMoveCount >= 3) {
+                    GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().RestartLevel();
+                    invalidMoveCount = 0;
+                    invalidMoves = true;
+                }
+            }
+            else {
+                invalidMoves = true;
+                invalidMoveCount = 0;
+            }
+        }
     }
 
     public bool HasMoved() {

@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy : MovingObject {
 
     private GameObject player;
     private Player playerScript;
+
+    List<Vector2> positions = new List<Vector2>();
 
     protected override void Start() {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -31,11 +34,27 @@ public class Enemy : MovingObject {
             moveX = player.transform.position.x > transform.position.x ? 1 : -1;
         }
 
-        if(!Move(moveX, moveY)) {
-            moveX *= -1;
-            moveY *= -1;
+        int desiredX = moveX;
 
-            Move(moveX, moveY);
+        if (positions.Contains(new Vector2(transform.position.x + moveX, transform.position.y + moveY)) || !Move(moveX, moveY))
+        {
+            if (moveX != 0)
+            {
+                moveX = 0;
+                moveY = 1;
+
+                if (positions.Contains(new Vector2(transform.position.x + moveX, transform.position.y + moveY)) || !Move(moveX, moveY))
+                {
+                    moveY = -1;
+
+                    if (positions.Contains(new Vector2(transform.position.x + moveX, transform.position.y + moveY)) || !Move(moveX, moveY))
+                    {
+                        positions.Add(new Vector2(transform.position.x, transform.position.y));
+                        moveY = 0;
+                        Move(desiredX * -1, moveY);
+                    }
+                }
+            }
         }
     }
 
