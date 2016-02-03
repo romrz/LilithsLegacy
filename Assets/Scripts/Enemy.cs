@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Enemy : MovingObject {
 
+    public bool moveFast = false;
+
     private GameObject player;
     private Player playerScript;
 
@@ -17,8 +19,19 @@ public class Enemy : MovingObject {
     }
 
     void Update() {
-        if(playerScript.HasMovedTwoTimes()) {
-            MoveEnemy();
+        if(moveFast)
+        {
+            if (playerScript.HasMoved())
+            {
+                MoveEnemy();
+            }
+        }
+        else
+        {
+            if (playerScript.HasMovedTwoTimes())
+            {
+                MoveEnemy();
+            }
         }
     }
 
@@ -45,7 +58,7 @@ public class Enemy : MovingObject {
 
                 if (positions.Contains(new Vector2(transform.position.x + moveX, transform.position.y + moveY)) || !Move(moveX, moveY))
                 {
-                    moveY = -1;
+                    moveY *= -1;
 
                     if (positions.Contains(new Vector2(transform.position.x + moveX, transform.position.y + moveY)) || !Move(moveX, moveY))
                     {
@@ -56,6 +69,8 @@ public class Enemy : MovingObject {
                 }
             }
         }
+
+
     }
 
 }

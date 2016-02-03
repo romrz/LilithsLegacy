@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ public class Map : MonoBehaviour {
     public GameObject[] obstacles;
     public GameObject floorTile;
     public GameObject exitTile;
+    public GameObject lilith;
     public Renderer transition;
 
     public GameObject player;
@@ -20,6 +22,10 @@ public class Map : MonoBehaviour {
     private List<Level> levels;
     private Level currentLevel;
     private int currentLevelNum;
+
+    private bool isLilith = false;
+    private bool isExit = false;
+
 
     private int changeLevel = 0;
 
@@ -69,15 +75,16 @@ public class Map : MonoBehaviour {
     private Vector2 position1 = new Vector2(3, 2);
     private Vector2 exit1 = new Vector2(3, 5);
 
+
     private int[,] map2 = new int[,] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
         {1, 1, 1, 0, 1, 0, 0, 0, 0, 1},
         {1, 1, 1, 0, 1, 0, 3, 0, 0, 1},
-        {1, 1, 1, 0, 1, 0, 0, 0, 0, 1},
+        {1, 1, 1, 0, 1, 0, 0, 4, 0, 1},
         {1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
         {1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-        {1, 0, 1, 0, 1, 1, 1, 1, 0, 1},
+        {1, 0, 1, 4, 1, 1, 1, 1, 0, 1},
         {1, 0, 3, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
@@ -104,12 +111,12 @@ public class Map : MonoBehaviour {
 
     private int[,] map4 = new int[,] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 0, 0, 0, 0, 0, 0, 3, 0, 1},
-        {1, 0, 0, 0, 0, 0, 2, 2, 2, 1},
+        {1, 0, 0, 0, 0, 0, 0, 3, 2, 1},
+        {1, 0, 0, 0, 2, 2, 2, 2, 2, 1},
         {1, 2, 0, 4, 0, 0, 0, 4, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
         {1, 3, 2, 0, 0, 0, 0, 0, 3, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -117,16 +124,15 @@ public class Map : MonoBehaviour {
     private Vector2 position4 = new Vector2(1, 8);
     private Vector2 exit4 = new Vector2(5, 5);
 
-
     private int[,] map5 = new int[,] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 1, 0, 0, 3, 1, 0, 0, 1},
-        {1, 4, 0, 2, 0, 0, 1, 0, 0, 1},
-        {1, 3, 1, 0, 1, 1, 1, 0, 0, 1},
-        {1, 0, 0, 0, 1, 2, 0, 4, 0, 1},
-        {1, 0, 0, 0, 1, 0, 4, 0, 0, 1},
-        {1, 0, 1, 0, 1, 2, 0, 2, 0, 1},
-        {1, 2, 0, 0, 1, 1, 1, 1, 0, 1},
+        {1, 4, 2, 0, 0, 0, 1, 0, 0, 1},
+        {1, 3, 1, 0, 1, 1, 1, 2, 0, 1},
+        {1, 0, 2, 0, 1, 2, 0, 2, 0, 1},
+        {1, 0, 2, 0, 1, 0, 2, 0, 2, 1},
+        {1, 0, 2, 0, 1, 2, 0, 2, 0, 1},
+        {1, 0, 1, 0, 1, 1, 1, 1, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
@@ -136,14 +142,14 @@ public class Map : MonoBehaviour {
 
     private int[,] map6 = new int[,] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 2, 0, 0, 0, 0, 0, 0, 2, 1},
-        {1, 0, 0, 0, 0, 4, 0, 0, 0, 1},
-        {1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
-        {1, 1, 1, 4, 1, 1, 0, 1, 1, 1},
-        {1, 1, 1, 0, 1, 1, 4, 1, 1, 1},
-        {1, 1, 1, 0, 0, 0, 0, 0, 1, 1},
-        {1, 2, 0, 0, 0, 0, 0, 2, 0, 1},
-        {1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+        {1, 2, 0, 2, 0, 0, 2, 0, 2, 1},
+        {1, 0, 2, 0, 0, 2, 0, 0, 2, 1},
+        {1, 1, 1, 0, 0, 2, 0, 1, 1, 1},
+        {1, 1, 1, 2, 1, 1, 0, 1, 1, 1},
+        {1, 1, 1, 0, 1, 1, 0, 1, 1, 1},
+        {1, 1, 1, 2, 0, 2, 2, 0, 1, 1},
+        {1, 2, 0, 2, 0, 2, 0, 2, 0, 1},
+        {1, 0, 2, 0, 0, 0, 2, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
     private Vector2 position6 = new Vector2(1, 1);
@@ -167,18 +173,97 @@ public class Map : MonoBehaviour {
 
     private int[,] map8 = new int[,] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 3, 2, 0, 0, 0, 1, 3, 0, 1},
+        {1, 0, 2, 0, 0, 0, 0, 0, 4, 1},
+        {1, 0, 2, 0, 1, 0, 0, 4, 0, 1},
+        {1, 0, 2, 0, 2, 2, 2, 0, 0, 1},
+        {1, 0, 2, 0, 0, 0, 1, 0, 3, 1},
+        {1, 0, 1, 2, 0, 0, 1, 0, 0, 1},
+        {1, 0, 0, 4, 1, 0, 1, 0, 0, 1},
+        {1, 0, 0, 3, 1, 0, 2, 0, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
+    private Vector2 position8 = new Vector2(1, 5);
+    private Vector2 exit8 = new Vector2(8, 8);
+
+    private int[,] map9 = new int[,] {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 3, 0, 1},
+        {1, 0, 0, 0, 0, 2, 0, 3, 3, 1},
+        {1, 4, 0, 4, 0, 2, 0, 3, 3, 1},
+        {1, 4, 0, 4, 0, 2, 0, 2, 2, 1},
+        {1, 0, 4, 0, 0, 0, 2, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 1, 0, 1, 1, 1, 1},
-        {1, 0, 1, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 1, 2, 1, 1, 1, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
-    private Vector2 position8 = new Vector2(8, 1);
-    private Vector2 exit8 = new Vector2(4, 4);
+
+
+    private Vector2 position9 = new Vector2(1, 1);
+    private Vector2 exit9 = new Vector2(8, 8);
+
+    private int[,] map10 = new int[,] {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 3, 0, 0, 1, 3, 1, 0, 0, 1},
+        {1, 0, 0, 0, 1, 0, 0, 2, 0, 1},
+        {1, 4, 0, 0, 1, 2, 0, 2, 0, 1},
+        {1, 0, 4, 0, 1, 0, 2, 2, 0, 1},
+        {1, 0, 2, 0, 1, 2, 0, 2, 0, 1},
+        {1, 4, 2, 3, 1, 0, 2, 0, 2, 1},
+        {1, 0, 3, 0, 1, 2, 2, 0, 2, 1},
+        {1, 0, 0, 2, 0, 0, 0, 0, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
+    private Vector2 position10 = new Vector2(1, 7);
+    private Vector2 exit10 = new Vector2(8, 8);
+
+
+    private int[,] map11 = new int[,] {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 3, 3, 0, 0, 0, 0, 3, 3, 1},
+        {1, 3, 0, 0, 4, 0, 0, 0, 3, 1},
+        {1, 0, 0, 2, 2, 2, 0, 0, 0, 1},
+        {1, 0, 4, 2, 0, 2, 4, 0, 0, 1},
+        {1, 0, 0, 2, 2, 2, 0, 0, 0, 1},
+        {1, 0, 0, 0, 4, 0, 0, 0, 0, 1},
+        {1, 3, 0, 0, 0, 0, 0, 0, 3, 1},
+        {1, 3, 3, 0, 0, 0, 0, 3, 3, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
+    private Vector2 position11 = new Vector2(4, 5);
+    private Vector2 exit11 = new Vector2(3, 2);
+
+
+    private int[,] map12 = new int[,] {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 4, 0, 0, 0, 4, 0, 0, 1},
+        {1, 0, 0, 3, 0, 3, 0, 0, 0, 1},
+        {1, 0, 0, 0, 3, 0, 0, 0, 0, 1},
+        {1, 0, 0, 3, 0, 3, 0, 0, 0, 1},
+        {1, 4, 0, 0, 0, 0, 0, 4, 0, 1},
+        {1, 0, 0, 0, 4, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
+    private Vector2 position12 = new Vector2(1, 1);
+    private Vector2 exit12 = new Vector2(7, 1);
+
+    private int[,] map13 = new int[,] {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 5, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
+    private Vector2 position13 = new Vector2(3, 2);
+    private Vector2 exit13 = new Vector2(3, 5);
 
     void Start () {
         transition.material.color = new Color(0, 0, 0, 0);
@@ -193,6 +278,11 @@ public class Map : MonoBehaviour {
         levels.Add(new Level(map6, width, height, position6, exit6));
         levels.Add(new Level(map7, width, height, position7, exit7));
         levels.Add(new Level(map8, width, height, position8, exit8));
+        levels.Add(new Level(map9, width, height, position9, exit9));
+        levels.Add(new Level(map10, width, height, position10, exit10));
+        levels.Add(new Level(map11, width, height, position11, exit11));
+        levels.Add(new Level(map12, width, height, position12, exit12));
+        levels.Add(new Level(map13, width, height, position13, exit13));
 
         LoadLevel(0);
 
@@ -211,6 +301,40 @@ public class Map : MonoBehaviour {
             StartCoroutine("FadeOutTransition");
             changeLevel = 0;
         }
+    }
+
+    void Update()
+    {
+        if(currentLevelNum == 12)
+        {
+            if(player.GetComponent<Player>().steps >= 10 && !isLilith)
+            {
+                ShowLilith();
+                isLilith = true;
+            }
+
+            if(player.GetComponent<Player>().steps >= 20 && !isExit)
+            {
+                ShowExit();
+                isExit = true;
+            }
+        }
+    }
+
+    void ShowExit()
+    {
+        GameObject instance = (GameObject)Instantiate(exitTile, new Vector3(currentLevel.exitPosition.x, currentLevel.exitPosition.y, exitTile.transform.position.z), Quaternion.identity);
+        instance.transform.parent = this.transform;
+    }
+
+    void ShowLilith()
+    {
+        GameObject old = GameObject.FindGameObjectWithTag("Demon");
+
+        Vector3 position = old.transform.position;
+        Destroy(old);
+
+        GameObject newInstance = (GameObject)Instantiate(lilith, position, Quaternion.identity);
     }
 
     public Level GetCurrentLevel() {
@@ -252,11 +376,22 @@ public class Map : MonoBehaviour {
             ClearLevel();
             LoadLevel(currentLevelNum + 1);
         }
+        else {
+            SceneManager.LoadScene("Credits");
+        }
     }
 
     public void RestartLevel() {
         ClearLevel();
         currentLevel.Reset();
+        player.GetComponent<Player>().steps = 0;
+        isExit = false;
+        isLilith = false;
+        if(currentLevelNum == 12)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("Demon"));
+            Destroy(GameObject.FindGameObjectWithTag("Exit"));
+        }
         LoadLevel(currentLevelNum);
         InvokeRepeating("BlinkPlayer", 0, 0.1f);
         Invoke("CancelPlayerBlinking", 1);
@@ -274,6 +409,7 @@ public class Map : MonoBehaviour {
     }
 
     void ClearLevel() {
+        player.GetComponent<Player>().Reset();
         foreach(Transform child in transform) {
             GameObject.Destroy(child.gameObject);
         }
@@ -294,6 +430,7 @@ public class Map : MonoBehaviour {
     }
 
     void SetExit(Vector2 position) {
+        if (currentLevelNum == 12) return;
         GameObject instance = (GameObject)Instantiate(exitTile, new Vector3(position.x, position.y, exitTile.transform.position.z), Quaternion.identity);
         instance.transform.parent = this.transform;
     }

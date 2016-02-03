@@ -6,12 +6,23 @@ public class Player : MovingObject {
     private bool hasMoved = false;
     private bool hasMovedTwoTimes = false;
     private int moveCount = 0;
+    public int steps;
 
     private int invalidMoveCount = 0;
     private bool invalidMoves = true;
 
     protected override void Start() {
         base.Start();
+    }
+
+    public void Reset()
+    {
+        steps = 0;
+        hasMoved = false;
+        hasMovedTwoTimes = false;
+        moveCount = 0;
+        invalidMoveCount = 0;
+        invalidMoves = true;
     }
 
     void Update() {
@@ -48,6 +59,11 @@ public class Player : MovingObject {
         if (moveCount == 2) {
             moveCount = 0;
             hasMovedTwoTimes = true;
+        }
+
+        if(hasMoved == true)
+        {
+            steps++;
         }
 
         bool move = Move(moveX, moveY);

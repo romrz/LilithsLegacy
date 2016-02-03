@@ -6,6 +6,10 @@ public class MovingObject : MonoBehaviour {
     public LayerMask collisionLayer;
     public float moveTime = 0.1f;
 
+    public AudioClip contactSound;
+    public AudioClip trapSound;
+    public AudioClip changeLevelSound;
+
     private float inverseMoveTime;
     private bool canMove = true;
     private BoxCollider2D collider;
@@ -38,17 +42,20 @@ public class MovingObject : MonoBehaviour {
             if(tag == "Player") {
                 if(hit.collider.tag == "Exit") {
                     //StartCoroutine(SmoothMovement(endPosition));
+                    transform.position = endPosition;
                     Map map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();
                     if (map.GetCurrentLevel().HasFilledTraps()) {
-                        transform.position = endPosition;
+                        SoundManager.instance.PlaySingle(changeLevelSound);
+                        //transform.position = endPosition;
                         hit.collider.enabled = false;
                         map.SetNextLevel();
                         return true;
                     }
-                    return false;
+                    return true;
                 }
 
                 if(hit.collider.tag == "Demon") {
+                    SoundManager.instance.PlaySingle(contactSound);
                     GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().RestartLevel();
                     return false;
                 }
@@ -71,9 +78,11 @@ public class MovingObject : MonoBehaviour {
 
             if(tag == "Demon") {
                 if (hit.collider.tag == "Player") {
+                    SoundManager.instance.PlaySingle(contactSound);
                     GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().RestartLevel();
                 }
                 if (hit.collider.tag == "Trap" && !hit.collider.gameObject.GetComponent<Trap>().HasDemon()) {
+                    SoundManager.instance.PlaySingle(trapSound);
                     //StartCoroutine(SmoothMovement(endPosition));
                     transform.position = endPosition;
                     canMove = false;
